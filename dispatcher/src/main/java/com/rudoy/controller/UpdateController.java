@@ -75,7 +75,7 @@ public class UpdateController {
     }
 
     private void setFileIsReceivedView(Update update) {
-        SendMessage sendMessage = messageUtils.generateSendMessageWithText(update, "File is received");
+        SendMessage sendMessage = messageUtils.generateSendMessageWithText(update, "File is received. Processed...");
         setView(sendMessage);
     }
 
