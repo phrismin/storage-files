@@ -17,7 +17,8 @@ public class UpdateController {
     private MessageUtils messageUtils;
     private UpdateProducer updateProducer;
 
-    public UpdateController(MessageUtils messageUtils) {
+    public UpdateController(MessageUtils messageUtils, UpdateProducer updateProducer) {
+        this.updateProducer = updateProducer;
         this.messageUtils = messageUtils;
     }
 
