@@ -6,7 +6,7 @@ import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.stereotype.Service;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 
-import static com.rudoy.RabbitQueue.ANSWER_MESSAGE_UPDATE;
+import static com.rudoy.RabbitQueue.ANSWER_MESSAGE;
 
 @Service
 public class AnswerConsumerImpl implements AnswerConsumer {
@@ -17,7 +17,7 @@ public class AnswerConsumerImpl implements AnswerConsumer {
     }
 
     @Override
-    @RabbitListener(queues = ANSWER_MESSAGE_UPDATE)
+    @RabbitListener(queues = ANSWER_MESSAGE)
     public void consume(SendMessage sendMessage) {
         updateController.setView(sendMessage);
     }
