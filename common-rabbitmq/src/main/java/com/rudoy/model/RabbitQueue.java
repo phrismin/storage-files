@@ -1,4 +1,4 @@
-package com.rudoy;
+package com.rudoy.model;
 
 public class RabbitQueue {
     public static final String DOC_MESSAGE_UPDATE = "doc_message_update";
