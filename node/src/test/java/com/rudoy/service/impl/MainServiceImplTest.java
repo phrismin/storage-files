@@ -3,8 +3,6 @@ package com.rudoy.service.impl;
 import com.rudoy.dao.RawDataDAO;
 import com.rudoy.entity.RawData;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.util.Assert;
@@ -15,7 +13,6 @@ import java.util.HashSet;
 import java.util.Set;
 
 @SpringBootTest
-@ExtendWith(MockitoExtension.class)
 class MainServiceImplTest {
 
     @Autowired
