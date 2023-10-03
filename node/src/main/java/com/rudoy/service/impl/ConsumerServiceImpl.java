@@ -40,9 +40,9 @@ public class ConsumerServiceImpl implements ConsumerService {
     }
 
     @Override
-    @RabbitListener(queues = AUDIO_MESSAGE_UPDATE)
-    public void consumeAudioMessageUpdate(Update update) {
-        log.debug("NODE SERVICE: Audio message is received");
-        mainService.processAudioMessage(update);
+    @RabbitListener(queues = VOICE_MESSAGE_UPDATE)
+    public void consumeVoiceMessageUpdate(Update update) {
+        log.debug("NODE SERVICE: Voice message is received");
+        mainService.processVoiceMessage(update);
     }
 }

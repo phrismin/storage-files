@@ -47,8 +47,8 @@ public class UpdateController {
             processMessageDocument(update);
         } else if (message.hasPhoto()) {
             processMessagePhoto(update);
-        } else if (message.hasAudio()) {
-            processMessageAudio(update);
+        } else if (message.hasVoice()) {
+            processMessageVoice(update);
         } else {
             setUnsupportedMessageTypeView(update);
         }
@@ -69,8 +69,8 @@ public class UpdateController {
         setFileIsReceivedView(update);
     }
 
-    private void processMessageAudio(Update update) {
-        updateProducer.produce(AUDIO_MESSAGE_UPDATE, update);
+    private void processMessageVoice(Update update) {
+        updateProducer.produce(VOICE_MESSAGE_UPDATE, update);
         setFileIsReceivedView(update);
     }
 

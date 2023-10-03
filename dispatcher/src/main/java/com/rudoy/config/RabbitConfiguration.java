@@ -32,8 +32,8 @@ public class RabbitConfiguration {
     }
 
     @Bean
-    public Queue audioMessageQueue() {
-        return new Queue(AUDIO_MESSAGE_UPDATE);
+    public Queue viuceMessageQueue() {
+        return new Queue(VOICE_MESSAGE_UPDATE);
     }
 
     @Bean

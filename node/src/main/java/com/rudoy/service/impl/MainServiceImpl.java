@@ -82,7 +82,7 @@ public class MainServiceImpl implements MainService {
     }
 
     @Override
-    public void processAudioMessage(Update update) {
+    public void processVoiceMessage(Update update) {
         saveRawData(update);
         AppUser appUser = findOrSaveAppUser(update);
         Long chatId = update.getMessage().getChatId();
@@ -91,8 +91,8 @@ public class MainServiceImpl implements MainService {
             return;
         }
 
-        // TODO добавить сохранение audio
-        String answer = "Audio is successfully loaded! The link for load: http:test.com/getAudio/111";
+        // TODO добавить сохранение voice
+        String answer = "Voice is successfully loaded! The link for load: http:test.com/getVoice/111";
         sendAnswer(answer, chatId);
     }
 
