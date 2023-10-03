@@ -10,7 +10,7 @@ public class MessageUtils {
     public SendMessage generateSendMessageWithText(Update update, String text) {
         Message message = update.getMessage();
         var sendMessage = new SendMessage();
-        sendMessage.setChatId(message.getChatId().toString());
+        sendMessage.setChatId(message.getChatId());
         sendMessage.setText(text);
         return sendMessage;
     }
