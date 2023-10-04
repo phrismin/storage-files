@@ -1,4 +1,4 @@
-package com.rudoy.entity.enums;
+package com.rudoy.entity;
 
 import lombok.*;
 

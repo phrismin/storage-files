@@ -3,6 +3,8 @@ package com.rudoy.service.impl;
 import com.rudoy.dao.AppDocumentDAO;
 import com.rudoy.dao.BinaryContentDAO;
 import com.rudoy.entity.AppDocument;
+import com.rudoy.entity.BinaryContent;
+import com.rudoy.exeptions.UploadFileException;
 import com.rudoy.service.FileService;
 import lombok.extern.log4j.Log4j;
 import org.json.JSONObject;
@@ -11,8 +13,12 @@ import org.springframework.context.annotation.PropertySource;
 import org.springframework.http.*;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
+import org.telegram.telegrambots.meta.api.objects.Document;
 import org.telegram.telegrambots.meta.api.objects.Message;
 
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
 
@@ -46,21 +52,39 @@ public class FileServiceImpl implements FileService {
                     .getString("file_path")
             );
             byte[] fileInByte = downloadFile(filePath);
+            BinaryContent transientBinaryContent = BinaryContent.builder()
+                    .fileAsArrayOfBytes(fileInByte)
+                    .build();
+            BinaryContent parsientBinaryContent = binaryContentDAO.save(transientBinaryContent);
+            Document telegramDocument = telegramMessage.getDocument();
+            AppDocument appDocument = buildTransientAppDoc(telegramDocument, parsientBinaryContent);
+            return appDocumentDAO.save(appDocument);
+        } else {
+            throw new UploadFileException("Bad response from telegram service: " + response);
         }
-        return null;
     }
 
     private byte[] downloadFile(String filePath) {
         String fullUri = fileStorageUri.replace("{token}", token).replace("{filePath}", filePath);
-        URL urlObject = null;
+        URL urlObject;
         try {
             urlObject = new URL(fullUri);
         } catch (MalformedURLException e) {
-            throw new RuntimeException(e);
+            throw new UploadFileException(e);
         }
 
-        // TODO считать файл
-        return new byte[0];
+        try (InputStream inputStream = urlObject.openStream())
+        {
+            byte[] buffer = new byte[8192];
+            ByteArrayOutputStream output = new ByteArrayOutputStream();
+            int bytesRead;
+            while ((bytesRead = inputStream.read(buffer)) != -1) {
+                output.write(buffer, 0, bytesRead);
+            }
+            return output.toByteArray();
+        } catch (IOException e) {
+            throw new UploadFileException(urlObject.toExternalForm(), e);
+        }
     }
 
     private ResponseEntity<String> getFilePath(String fileId) {
@@ -76,6 +100,15 @@ public class FileServiceImpl implements FileService {
                 token,
                 fileId
         );
+    }
 
+    private AppDocument buildTransientAppDoc(Document telegramDocument, BinaryContent parsientBinaryContent) {
+        return AppDocument.builder()
+                .telegramFieldId(telegramDocument.getFileId())
+                .docName(telegramDocument.getFileName())
+                .binaryContent(parsientBinaryContent)
+                .mimeType(telegramDocument.getMimeType())
+                .fileSize(telegramDocument.getFileSize())
+                .build();
     }
 }

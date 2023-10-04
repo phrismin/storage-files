@@ -2,9 +2,12 @@ package com.rudoy.service.impl;
 
 import com.rudoy.dao.AppUserDAO;
 import com.rudoy.dao.RawDataDAO;
+import com.rudoy.entity.AppDocument;
 import com.rudoy.entity.AppUser;
 import com.rudoy.entity.RawData;
 import com.rudoy.entity.enums.UserState;
+import com.rudoy.exeptions.UploadFileException;
+import com.rudoy.service.FileService;
 import com.rudoy.service.MainService;
 import com.rudoy.service.ProducerService;
 import com.rudoy.service.enums.ServiceCommands;
@@ -21,11 +24,16 @@ public class MainServiceImpl implements MainService {
     private final ProducerService producerService;
     private final RawDataDAO rawDataDAO;
     private final AppUserDAO appUserDao;
+    private final FileService fileService;
 
-    public MainServiceImpl(ProducerService producerService, RawDataDAO rawDataDAO, AppUserDAO appUserDao) {
+    public MainServiceImpl(ProducerService producerService,
+                           RawDataDAO rawDataDAO,
+                           AppUserDAO appUserDao,
+                           FileService fileService) {
         this.producerService = producerService;
         this.rawDataDAO = rawDataDAO;
         this.appUserDao = appUserDao;
+        this.fileService = fileService;
     }
 
     @Override
@@ -36,7 +44,8 @@ public class MainServiceImpl implements MainService {
         UserState userState = appUser.getUserState();
 
         var output = "";
-        if (ServiceCommands.CANCEL.equals(text)) {
+        var serviceCommand = ServiceCommands.fromValue(text);
+        if (ServiceCommands.CANCEL.equals(serviceCommand)) {
             output = cancelProcess(appUser);
         } else if (UserState.BASIC_STATE.equals(userState)) {
             output = processServiceCommand(appUser, text);
@@ -61,9 +70,16 @@ public class MainServiceImpl implements MainService {
             return;
         }
 
-        // TODO добавить сохранение документа
-        String answer = "Document is successfully loaded! The link for load: http:test.com/getDoc/555";
-        sendAnswer(answer, chatId);
+        try {
+            AppDocument appDocument = fileService.processDoc(update.getMessage());
+            //TODO Добавить генерацию ссылки для скачивания документа
+            var answer = "Document is successfully loaded! The link for load: http:test.com/getDoc/555";
+            sendAnswer(answer, chatId);
+        } catch (UploadFileException e) {
+            log.error(e);
+            var error = "Unfortunately, file upload failed. Try again later.";
+            sendAnswer(error, chatId);
+        }
     }
 
     @Override
@@ -106,9 +122,8 @@ public class MainServiceImpl implements MainService {
             String error = "Cancel the current command with /cancel to send files.";
             sendAnswer(error, chatId);
             return true;
-        } else {
-            return false;
         }
+        return false;
     }
 
     private void sendAnswer(String output, Long chatId) {
@@ -119,15 +134,16 @@ public class MainServiceImpl implements MainService {
     }
 
     private String processServiceCommand(AppUser appUser, String cmd) {
-        if (ServiceCommands.REGISTRATION.equals(cmd)) {
+        ServiceCommands serviceCommand = ServiceCommands.fromValue(cmd);
+        if (ServiceCommands.REGISTRATION.equals(serviceCommand)) {
             // TODO добавить регистрацию
-            return "Temporally unavailable";
-        } else if (ServiceCommands.START.equals(cmd)) {
-            return "Hello! To see the list of available commands, press the /help";
-        } else if (ServiceCommands.HELP.equals(cmd)) {
+            return "Temporally unavailable.";
+        } else if (ServiceCommands.START.equals(serviceCommand)) {
+            return "Hello! To see the list of available commands, press the /help.";
+        } else if (ServiceCommands.HELP.equals(serviceCommand)) {
             return help();
         } else {
-            return "Unknown command! To see the list of available commands, press the /help";
+            return "Unknown command! To see the list of available commands, press the /help.";
         }
     }
 

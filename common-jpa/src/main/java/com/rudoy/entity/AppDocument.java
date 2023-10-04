@@ -1,6 +1,5 @@
 package com.rudoy.entity;
 
-import com.rudoy.entity.enums.BinaryContent;
 import lombok.*;
 
 import javax.persistence.*;

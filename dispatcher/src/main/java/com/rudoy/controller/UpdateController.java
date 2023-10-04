@@ -56,31 +56,22 @@ public class UpdateController {
 
     private void processMessageText(Update update) {
         updateProducer.produce(TEXT_MESSAGE_UPDATE, update);
-        setFileIsReceivedView(update);
     }
 
     private void processMessageDocument(Update update) {
         updateProducer.produce(DOC_MESSAGE_UPDATE, update);
-        setFileIsReceivedView(update);
     }
 
     private void processMessagePhoto(Update update) {
         updateProducer.produce(PHOTO_MESSAGE_UPDATE, update);
-        setFileIsReceivedView(update);
     }
 
     private void processMessageVoice(Update update) {
         updateProducer.produce(VOICE_MESSAGE_UPDATE, update);
-        setFileIsReceivedView(update);
-    }
-
-    private void setFileIsReceivedView(Update update) {
-//        SendMessage sendMessage = messageUtils.generateSendMessageWithText(update, "File is received. Processed...");
-//        setView(sendMessage);
     }
 
     private void setUnsupportedMessageTypeView(Update update) {
-        SendMessage sendMessage = messageUtils.generateSendMessageWithText(update, "Unsupported message type");
+        SendMessage sendMessage = messageUtils.generateSendMessageWithText(update, "Unsupported message type.");
         setView(sendMessage);
     }
 
