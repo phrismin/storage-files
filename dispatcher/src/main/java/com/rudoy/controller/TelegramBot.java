@@ -16,7 +16,6 @@ import javax.annotation.PostConstruct;
 
 @Component
 @Slf4j
-@PropertySource("classpath:application-dev.properties")
 public class TelegramBot extends TelegramLongPollingBot {
 
     @Value("${bot.name}")

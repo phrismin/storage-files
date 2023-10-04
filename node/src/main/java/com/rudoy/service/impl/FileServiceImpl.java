@@ -28,7 +28,6 @@ import java.net.URL;
 
 @Service
 @Log4j
-@PropertySource("classpath:application-dev.properties")
 public class FileServiceImpl implements FileService {
     @Value("${bot.token}")
     private String token;
