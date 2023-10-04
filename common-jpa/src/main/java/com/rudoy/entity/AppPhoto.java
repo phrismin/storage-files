@@ -11,14 +11,12 @@ import javax.persistence.*;
 @AllArgsConstructor
 @Entity
 @Builder
-public class AppDocument {
+public class AppPhoto {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String telegramFieldId;
-    private String docName;
     @OneToOne
     private BinaryContent binaryContent;
-    private String mimeType;
-    private Long fileSize;
+    private Integer fileSize;
 }

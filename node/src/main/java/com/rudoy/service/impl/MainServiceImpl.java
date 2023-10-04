@@ -1,8 +1,10 @@
 package com.rudoy.service.impl;
 
+import com.rudoy.dao.AppPhotoDAO;
 import com.rudoy.dao.AppUserDAO;
 import com.rudoy.dao.RawDataDAO;
 import com.rudoy.entity.AppDocument;
+import com.rudoy.entity.AppPhoto;
 import com.rudoy.entity.AppUser;
 import com.rudoy.entity.RawData;
 import com.rudoy.entity.enums.UserState;
@@ -25,15 +27,18 @@ public class MainServiceImpl implements MainService {
     private final RawDataDAO rawDataDAO;
     private final AppUserDAO appUserDao;
     private final FileService fileService;
+    private final AppPhotoDAO appPhotoDAO;
 
     public MainServiceImpl(ProducerService producerService,
                            RawDataDAO rawDataDAO,
                            AppUserDAO appUserDao,
-                           FileService fileService) {
+                           FileService fileService,
+                           AppPhotoDAO appPhotoDAO) {
         this.producerService = producerService;
         this.rawDataDAO = rawDataDAO;
         this.appUserDao = appUserDao;
         this.fileService = fileService;
+        this.appPhotoDAO = appPhotoDAO;
     }
 
     @Override
@@ -92,9 +97,16 @@ public class MainServiceImpl implements MainService {
             return;
         }
 
-        // TODO добавить сохранение фото
-        String answer = "Photo is successfully loaded! The link for load: http:test.com/getPhoto/555";
-        sendAnswer(answer, chatId);
+        try {
+            AppPhoto appPhoto = fileService.processPhoto(update.getMessage());
+            //TODO Добавить генерацию ссылки для скачивания документа
+            var answer = "Photo is successfully loaded! The link for load: http:test.com/getPhoto/555";
+            sendAnswer(answer, chatId);
+        } catch (UploadFileException e) {
+            log.error(e);
+            var error = "Unfortunately, photo upload failed. Try again later.";
+            sendAnswer(error, chatId);
+        }
     }
 
     @Override
@@ -184,7 +196,6 @@ public class MainServiceImpl implements MainService {
     private void saveRawData(Update update) {
         RawData rawData = new RawData();
         rawData.setEvent(update);
-
         rawDataDAO.save(rawData);
     }
 }
