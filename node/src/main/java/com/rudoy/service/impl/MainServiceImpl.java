@@ -12,6 +12,7 @@ import com.rudoy.exeptions.UploadFileException;
 import com.rudoy.service.FileService;
 import com.rudoy.service.MainService;
 import com.rudoy.service.ProducerService;
+import com.rudoy.service.enums.LinkType;
 import com.rudoy.service.enums.ServiceCommands;
 import lombok.extern.log4j.Log4j;
 import org.springframework.stereotype.Service;
@@ -77,8 +78,8 @@ public class MainServiceImpl implements MainService {
 
         try {
             AppDocument appDocument = fileService.processDoc(update.getMessage());
-            //TODO Добавить генерацию ссылки для скачивания документа
-            var answer = "Document is successfully loaded! The link for load: http:test.com/getDoc/555";
+            String link = fileService.generateLink(appDocument.getId(), LinkType.GET_DOC);
+            var answer = "Document is successfully loaded! The link for load:" + link;
             sendAnswer(answer, chatId);
         } catch (UploadFileException e) {
             log.error(e);
@@ -99,8 +100,8 @@ public class MainServiceImpl implements MainService {
 
         try {
             AppPhoto appPhoto = fileService.processPhoto(update.getMessage());
-            //TODO Добавить генерацию ссылки для скачивания документа
-            var answer = "Photo is successfully loaded! The link for load: http:test.com/getPhoto/555";
+            String link = fileService.generateLink(appPhoto.getId(), LinkType.GET_PHOTO);
+            var answer = "Photo is successfully loaded! The link for load: " + link;
             sendAnswer(answer, chatId);
         } catch (UploadFileException e) {
             log.error(e);
