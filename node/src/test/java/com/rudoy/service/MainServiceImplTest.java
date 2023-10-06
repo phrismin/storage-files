@@ -1,4 +1,4 @@
-package com.rudoy.service.impl;
+package com.rudoy.service;
 
 import com.rudoy.dao.RawDataDAO;
 import com.rudoy.entity.RawData;

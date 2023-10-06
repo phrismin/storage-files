@@ -1,4 +1,4 @@
-package com.rudoy.service.impl;
+package com.rudoy.service;
 
 import com.rudoy.service.ProducerService;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;

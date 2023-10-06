@@ -1,4 +1,4 @@
-package com.rudoy.service.impl;
+package com.rudoy.service;
 
 import com.rudoy.service.UpdateProducer;
 import lombok.extern.log4j.Log4j;
