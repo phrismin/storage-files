@@ -1,4 +1,4 @@
-package com.rudoy.service;
+package com.rudoy.service.impl;
 
 import com.rudoy.dao.AppDocumentDAO;
 import com.rudoy.dao.AppPhotoDAO;

@@ -1,4 +1,4 @@
-package com.rudoy.service;
+package com.rudoy.service.impl;
 
 import com.rudoy.service.ConsumerService;
 import com.rudoy.service.MainService;

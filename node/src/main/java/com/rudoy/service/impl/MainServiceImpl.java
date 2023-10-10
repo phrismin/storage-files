@@ -1,4 +1,4 @@
-package com.rudoy.service;
+package com.rudoy.service.impl;
 
 import com.rudoy.dao.AppPhotoDAO;
 import com.rudoy.dao.AppUserDAO;
@@ -20,6 +20,8 @@ import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.Message;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.api.objects.User;
+
+import java.util.Optional;
 
 @Service
 @Log4j
@@ -176,8 +178,8 @@ public class MainServiceImpl implements MainService {
         Message textMessage = update.getMessage();
         User telegramUser = textMessage.getFrom();
 
-        AppUser persistantAppUser = appUserDao.findAppUserByTelegramUserId(telegramUser.getId());
-        if (persistantAppUser == null) {
+        Optional<AppUser> optionalAppUser = appUserDao.findByTelegramUserId(telegramUser.getId());
+        if (optionalAppUser.isEmpty()) {
             AppUser transientAppUser = AppUser.builder()
                     .telegramUserId(telegramUser.getId())
                     .userName(telegramUser.getUserName())
@@ -191,7 +193,7 @@ public class MainServiceImpl implements MainService {
             return appUserDao.save(transientAppUser);
         }
 
-       return persistantAppUser;
+       return optionalAppUser.get();
     }
 
     private void saveRawData(Update update) {
