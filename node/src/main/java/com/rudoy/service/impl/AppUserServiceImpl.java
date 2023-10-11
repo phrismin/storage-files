@@ -1,6 +1,7 @@
 package com.rudoy.service.impl;
 
 import com.rudoy.dao.AppUserDAO;
+import com.rudoy.dto.MailParams;
 import com.rudoy.entity.AppUser;
 import com.rudoy.entity.enums.UserState;
 import com.rudoy.service.AppUserService;
@@ -8,11 +9,11 @@ import com.rudoy.utils.CryptoTool;
 import com.sun.net.httpserver.Headers;
 import lombok.extern.log4j.Log4j;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
+import org.springframework.http.*;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
+import javax.mail.Header;
 import javax.mail.internet.AddressException;
 import javax.mail.internet.InternetAddress;
 import java.util.Optional;
@@ -47,6 +48,7 @@ public class AppUserServiceImpl implements AppUserService {
     public String setEmail(AppUser appUser, String email) {
         try {
             InternetAddress emailAddress = new InternetAddress(email);
+            emailAddress.validate();
         } catch (AddressException e) {
             return "Please enter valid email. To cancel, press the /cancel.";
         }
@@ -68,12 +70,26 @@ public class AppUserServiceImpl implements AppUserService {
             return "An email has been sent to your email. " +
                     "Follow the link in the email to confirm registration.";
         } else {
-            return "This email is already in use. Please enter valid email. " +
+            return "This email is already in use. Please enter valid email or another email. " +
                     "To cancel, press the /cancel.";
         }
     }
 
     private ResponseEntity<?> sendRequestToMailService(String cryptoUserId, String email) {
-        return null;
+        RestTemplate restTemplate = new RestTemplate();
+        HttpHeaders httpHeaders = new HttpHeaders();
+        httpHeaders.setContentType(MediaType.APPLICATION_JSON);
+        MailParams mailParams = MailParams.builder()
+                .id(cryptoUserId)
+                .emailTo(email)
+                .build();
+        HttpEntity<MailParams> requestEntity = new HttpEntity<>(mailParams, httpHeaders);
+
+        return restTemplate.exchange(
+                mailServiceUri,
+                HttpMethod.POST,
+                requestEntity,
+                String.class
+        );
     }
 }

@@ -18,6 +18,7 @@ public class ActivationController {
 
     @GetMapping("/activation")
     public ResponseEntity<?> activation(@RequestParam String id) {
+        //TODO сделать обоаботку разных случаев(некорректный ввод и т.д.)
         boolean activation = userActivationService.activation(id);
         if (activation) {
             return ResponseEntity.ok().body("Registration successful!");

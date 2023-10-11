@@ -9,6 +9,7 @@ import com.rudoy.entity.AppUser;
 import com.rudoy.entity.RawData;
 import com.rudoy.entity.enums.UserState;
 import com.rudoy.exeptions.UploadFileException;
+import com.rudoy.service.AppUserService;
 import com.rudoy.service.FileService;
 import com.rudoy.service.MainService;
 import com.rudoy.service.ProducerService;
@@ -31,17 +32,20 @@ public class MainServiceImpl implements MainService {
     private final AppUserDAO appUserDao;
     private final FileService fileService;
     private final AppPhotoDAO appPhotoDAO;
+    private final AppUserService appUserService;
 
     public MainServiceImpl(ProducerService producerService,
                            RawDataDAO rawDataDAO,
                            AppUserDAO appUserDao,
                            FileService fileService,
-                           AppPhotoDAO appPhotoDAO) {
+                           AppPhotoDAO appPhotoDAO,
+                           AppUserService appUserService) {
         this.producerService = producerService;
         this.rawDataDAO = rawDataDAO;
         this.appUserDao = appUserDao;
         this.fileService = fileService;
         this.appPhotoDAO = appPhotoDAO;
+        this.appUserService = appUserService;
     }
 
     @Override
@@ -51,14 +55,14 @@ public class MainServiceImpl implements MainService {
         String text = update.getMessage().getText();
         UserState userState = appUser.getUserState();
 
-        var output = "";
-        var serviceCommand = ServiceCommands.fromValue(text);
+        String output = "";
+        ServiceCommands serviceCommand = ServiceCommands.fromValue(text);
         if (ServiceCommands.CANCEL.equals(serviceCommand)) {
             output = cancelProcess(appUser);
         } else if (UserState.BASIC_STATE.equals(userState)) {
             output = processServiceCommand(appUser, text);
         } else if (UserState.WAIT_FOR_EMAIL_STATE.equals(userState)) {
-            // TODO добавить обработку мыла
+            output = appUserService.setEmail(appUser, text);
         } else {
             log.error("Unknown user state: " + userState);
             output = "Unknown error! Please, input /cancel and retry again!";
@@ -151,8 +155,7 @@ public class MainServiceImpl implements MainService {
     private String processServiceCommand(AppUser appUser, String cmd) {
         ServiceCommands serviceCommand = ServiceCommands.fromValue(cmd);
         if (ServiceCommands.REGISTRATION.equals(serviceCommand)) {
-            // TODO добавить регистрацию
-            return "Temporally unavailable.";
+            return appUserService.registerUser(appUser);
         } else if (ServiceCommands.START.equals(serviceCommand)) {
             return "Hello! To see the list of available commands, press the /help.";
         } else if (ServiceCommands.HELP.equals(serviceCommand)) {
@@ -185,8 +188,7 @@ public class MainServiceImpl implements MainService {
                     .userName(telegramUser.getUserName())
                     .firstName(telegramUser.getFirstName())
                     .lastName(telegramUser.getLastName())
-                    // TODO
-                    .isActive(true)
+                    .isActive(false)
                     .userState(UserState.BASIC_STATE)
                     .build();
 
