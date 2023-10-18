@@ -8,7 +8,7 @@ import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.Message;
 import org.telegram.telegrambots.meta.api.objects.Update;
 
-import static com.rudoy.RabbitQueue.*;
+import static com.rudoy.model.RabbitQueue.*;
 
 @Component
 @Slf4j
@@ -41,14 +41,14 @@ public class UpdateController {
 
     private void distributeMessageByType(Update update) {
         Message message = update.getMessage();
-        if (message.getText() != null) {
+        if (message.hasText()) {
             processMessageText(update);
-        } else if (message.getDocument() != null) {
+        } else if (message.hasDocument()) {
             processMessageDocument(update);
-        } else if (message.getPhoto() != null) {
+        } else if (message.hasPhoto()) {
             processMessagePhoto(update);
-        } else if (message.getAudio() != null) {
-            processMessageAudio(update);
+        } else if (message.hasVoice()) {
+            processMessageVoice(update);
         } else {
             setUnsupportedMessageTypeView(update);
         }
@@ -56,31 +56,22 @@ public class UpdateController {
 
     private void processMessageText(Update update) {
         updateProducer.produce(TEXT_MESSAGE_UPDATE, update);
-        setFileIsReceivedView(update);
     }
 
     private void processMessageDocument(Update update) {
         updateProducer.produce(DOC_MESSAGE_UPDATE, update);
-        setFileIsReceivedView(update);
     }
 
     private void processMessagePhoto(Update update) {
         updateProducer.produce(PHOTO_MESSAGE_UPDATE, update);
-        setFileIsReceivedView(update);
     }
 
-    private void processMessageAudio(Update update) {
-        updateProducer.produce(AUDIO_MESSAGE_UPDATE, update);
-        setFileIsReceivedView(update);
-    }
-
-    private void setFileIsReceivedView(Update update) {
-        SendMessage sendMessage = messageUtils.generateSendMessageWithText(update, "File is received. Processed...");
-        setView(sendMessage);
+    private void processMessageVoice(Update update) {
+        updateProducer.produce(VOICE_MESSAGE_UPDATE, update);
     }
 
     private void setUnsupportedMessageTypeView(Update update) {
-        SendMessage sendMessage = messageUtils.generateSendMessageWithText(update, "Unsupported message type");
+        SendMessage sendMessage = messageUtils.generateSendMessageWithText(update, "Unsupported message type.");
         setView(sendMessage);
     }
 

@@ -1,0 +1,13 @@
+server:
+  port: 8084
+
+bot:
+  name: Universal2023Bot
+  token: 6354455610:AAEsbiuSzRHaZezSAH53tQNLmLVDnKTdWx0
+
+spring:
+  rabbitmq:
+    host: localhost
+    port: 5672
+    username: userok
+    password: p@ssw0rd

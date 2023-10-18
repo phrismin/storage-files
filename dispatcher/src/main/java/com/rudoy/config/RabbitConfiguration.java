@@ -6,7 +6,7 @@ import org.springframework.amqp.support.converter.MessageConverter;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
-import static com.rudoy.RabbitQueue.*;
+import static com.rudoy.model.RabbitQueue.*;
 
 @Configuration
 public class RabbitConfiguration {
@@ -32,8 +32,8 @@ public class RabbitConfiguration {
     }
 
     @Bean
-    public Queue audioMessageQueue() {
-        return new Queue(AUDIO_MESSAGE_UPDATE);
+    public Queue viuceMessageQueue() {
+        return new Queue(VOICE_MESSAGE_UPDATE);
     }
 
     @Bean

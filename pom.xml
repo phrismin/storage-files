@@ -12,6 +12,10 @@
         <module>dispatcher</module>
         <module>common-rabbitmq</module>
         <module>node</module>
+        <module>common-jpa</module>
+        <module>rest-service</module>
+        <module>common-utils</module>
+        <module>mail-service</module>
     </modules>
 
     <properties>
@@ -39,6 +43,12 @@
             <artifactId>lombok</artifactId>
             <version>1.18.28</version>
             <scope>provided</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-test</artifactId>
+            <scope>test</scope>
         </dependency>
     </dependencies>
 
