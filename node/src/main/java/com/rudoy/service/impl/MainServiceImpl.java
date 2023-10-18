@@ -1,6 +1,5 @@
 package com.rudoy.service.impl;
 
-import com.rudoy.dao.AppPhotoDAO;
 import com.rudoy.dao.AppUserDAO;
 import com.rudoy.dao.RawDataDAO;
 import com.rudoy.entity.AppDocument;
@@ -31,20 +30,17 @@ public class MainServiceImpl implements MainService {
     private final RawDataDAO rawDataDAO;
     private final AppUserDAO appUserDao;
     private final FileService fileService;
-    private final AppPhotoDAO appPhotoDAO;
     private final AppUserService appUserService;
 
     public MainServiceImpl(ProducerService producerService,
                            RawDataDAO rawDataDAO,
                            AppUserDAO appUserDao,
                            FileService fileService,
-                           AppPhotoDAO appPhotoDAO,
                            AppUserService appUserService) {
         this.producerService = producerService;
         this.rawDataDAO = rawDataDAO;
         this.appUserDao = appUserDao;
         this.fileService = fileService;
-        this.appPhotoDAO = appPhotoDAO;
         this.appUserService = appUserService;
     }
 
@@ -55,7 +51,7 @@ public class MainServiceImpl implements MainService {
         String text = update.getMessage().getText();
         UserState userState = appUser.getUserState();
 
-        String output = "";
+        String output;
         ServiceCommands serviceCommand = ServiceCommands.fromValue(text);
         if (ServiceCommands.CANCEL.equals(serviceCommand)) {
             output = cancelProcess(appUser);
