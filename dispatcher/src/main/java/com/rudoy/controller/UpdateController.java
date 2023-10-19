@@ -1,5 +1,6 @@
 package com.rudoy.controller;
 
+import com.rudoy.config.RabbitConfiguration;
 import com.rudoy.service.UpdateProducer;
 import com.rudoy.utils.MessageUtils;
 import lombok.extern.slf4j.Slf4j;
@@ -8,18 +9,20 @@ import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.Message;
 import org.telegram.telegrambots.meta.api.objects.Update;
 
-import static com.rudoy.model.RabbitQueue.*;
-
 @Component
 @Slf4j
 public class UpdateController {
     private TelegramBot telegramBot;
     private MessageUtils messageUtils;
     private UpdateProducer updateProducer;
+    private final RabbitConfiguration rabbitConfiguration;
 
-    public UpdateController(MessageUtils messageUtils, UpdateProducer updateProducer) {
+    public UpdateController(MessageUtils messageUtils,
+                            UpdateProducer updateProducer,
+                            RabbitConfiguration rabbitConfiguration) {
         this.updateProducer = updateProducer;
         this.messageUtils = messageUtils;
+        this.rabbitConfiguration = rabbitConfiguration;
     }
 
     public void registerTelegramBot(TelegramBot telegramBot) {
@@ -53,15 +56,15 @@ public class UpdateController {
     }
 
     private void processMessageText(Update update) {
-        updateProducer.produce(TEXT_MESSAGE_UPDATE, update);
+        updateProducer.produce(rabbitConfiguration.getTextMessageUpdateQueue(), update);
     }
 
     private void processMessageDocument(Update update) {
-        updateProducer.produce(DOC_MESSAGE_UPDATE, update);
+        updateProducer.produce(rabbitConfiguration.getDocMessageUpdateQueue(), update);
     }
 
     private void processMessagePhoto(Update update) {
-        updateProducer.produce(PHOTO_MESSAGE_UPDATE, update);
+        updateProducer.produce(rabbitConfiguration.getPhotoMessageUpdateQueue(), update);
     }
 
     private void setUnsupportedMessageTypeView(Update update) {

@@ -14,6 +14,7 @@ import com.rudoy.service.MainService;
 import com.rudoy.service.ProducerService;
 import com.rudoy.service.enums.LinkType;
 import com.rudoy.service.enums.ServiceCommands;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j;
 import org.springframework.stereotype.Service;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
@@ -23,26 +24,15 @@ import org.telegram.telegrambots.meta.api.objects.User;
 
 import java.util.Optional;
 
-@Service
+@RequiredArgsConstructor
 @Log4j
+@Service
 public class MainServiceImpl implements MainService {
     private final ProducerService producerService;
     private final RawDataDAO rawDataDAO;
     private final AppUserDAO appUserDao;
     private final FileService fileService;
     private final AppUserService appUserService;
-
-    public MainServiceImpl(ProducerService producerService,
-                           RawDataDAO rawDataDAO,
-                           AppUserDAO appUserDao,
-                           FileService fileService,
-                           AppUserService appUserService) {
-        this.producerService = producerService;
-        this.rawDataDAO = rawDataDAO;
-        this.appUserDao = appUserDao;
-        this.fileService = fileService;
-        this.appUserService = appUserService;
-    }
 
     @Override
     public void processTextMessage(Update update) {

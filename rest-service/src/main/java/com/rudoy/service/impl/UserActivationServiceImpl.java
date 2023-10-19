@@ -4,19 +4,16 @@ import com.rudoy.dao.AppUserDAO;
 import com.rudoy.entity.AppUser;
 import com.rudoy.service.UserActivationService;
 import com.rudoy.utils.CryptoTool;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
 
+@RequiredArgsConstructor
 @Service
 public class UserActivationServiceImpl implements UserActivationService {
     private final AppUserDAO appUserDAO;
     private final CryptoTool cryptoTool;
-
-    public UserActivationServiceImpl(AppUserDAO appUserDAO, CryptoTool cryptoTool) {
-        this.appUserDAO = appUserDAO;
-        this.cryptoTool = cryptoTool;
-    }
 
     @Override
     public boolean activation(String cryptoId) {

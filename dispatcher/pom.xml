@@ -15,7 +15,6 @@
         <maven.compiler.source>17</maven.compiler.source>
         <maven.compiler.target>17</maven.compiler.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <common-rabbitmq.version>1.0-SNAPSHOT</common-rabbitmq.version>
     </properties>
 
     <dependencies>
@@ -28,12 +27,6 @@
             <groupId>org.telegram</groupId>
             <artifactId>telegrambots-spring-boot-starter</artifactId>
             <version>${telegrambot.starter.version}</version>
-        </dependency>
-
-        <dependency>
-            <groupId>com.rudoy</groupId>
-            <artifactId>common-rabbitmq</artifactId>
-            <version>${common-rabbitmq.version}</version>
         </dependency>
 
         <dependency>
