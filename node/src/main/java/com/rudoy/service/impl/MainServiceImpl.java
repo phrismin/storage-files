@@ -112,21 +112,6 @@ public class MainServiceImpl implements MainService {
         }
     }
 
-    @Override
-    public void processVoiceMessage(Update update) {
-        saveRawData(update);
-        AppUser appUser = findOrSaveAppUser(update);
-        Long chatId = update.getMessage().getChatId();
-
-        if (isNotAllowToSendContent(chatId, appUser)) {
-            return;
-        }
-
-        // TODO добавить сохранение voice
-        String answer = "Voice is successfully loaded! The link for load: http:test.com/getVoice/111";
-        sendAnswer(answer, chatId);
-    }
-
     private boolean isNotAllowToSendContent(Long chatId, AppUser appUser) {
         UserState userState = appUser.getUserState();
         if (!appUser.getIsActive()) {
