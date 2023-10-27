@@ -7,8 +7,8 @@ import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.stereotype.Service;
 import org.telegram.telegrambots.meta.api.objects.Update;
 
-@Service
 @Log4j
+@Service
 public class ConsumerServiceImpl implements ConsumerService {
     private final MainService mainService;
 

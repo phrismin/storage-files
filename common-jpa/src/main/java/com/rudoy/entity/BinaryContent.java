@@ -12,8 +12,8 @@ import javax.persistence.Id;
 @EqualsAndHashCode(exclude = "id")
 @NoArgsConstructor
 @AllArgsConstructor
-@Entity
 @Builder
+@Entity
 public class BinaryContent {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

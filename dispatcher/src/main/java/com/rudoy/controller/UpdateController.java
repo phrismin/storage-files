@@ -3,27 +3,22 @@ package com.rudoy.controller;
 import com.rudoy.config.RabbitConfiguration;
 import com.rudoy.service.UpdateProducer;
 import com.rudoy.utils.MessageUtils;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.Message;
 import org.telegram.telegrambots.meta.api.objects.Update;
 
-@Component
+@RequiredArgsConstructor
 @Slf4j
+@Component
 public class UpdateController {
     private TelegramBot telegramBot;
-    private MessageUtils messageUtils;
-    private UpdateProducer updateProducer;
+    private final MessageUtils messageUtils;
+    private final UpdateProducer updateProducer;
     private final RabbitConfiguration rabbitConfiguration;
 
-    public UpdateController(MessageUtils messageUtils,
-                            UpdateProducer updateProducer,
-                            RabbitConfiguration rabbitConfiguration) {
-        this.updateProducer = updateProducer;
-        this.messageUtils = messageUtils;
-        this.rabbitConfiguration = rabbitConfiguration;
-    }
 
     public void registerTelegramBot(TelegramBot telegramBot) {
         this.telegramBot = telegramBot;

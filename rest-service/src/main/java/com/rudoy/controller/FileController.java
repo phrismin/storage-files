@@ -21,8 +21,8 @@ import java.io.IOException;
 
 @RequiredArgsConstructor
 @Log4j
-@RestController
 @RequestMapping("/file")
+@RestController
 public class FileController {
     private final FileService fileService;
 
