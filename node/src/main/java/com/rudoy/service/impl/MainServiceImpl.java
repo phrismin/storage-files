@@ -14,6 +14,7 @@ import com.rudoy.service.MainService;
 import com.rudoy.service.ProducerService;
 import com.rudoy.service.enums.LinkType;
 import com.rudoy.service.enums.ServiceCommands;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j;
 import org.springframework.stereotype.Service;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
@@ -23,26 +24,15 @@ import org.telegram.telegrambots.meta.api.objects.User;
 
 import java.util.Optional;
 
-@Service
+@RequiredArgsConstructor
 @Log4j
+@Service
 public class MainServiceImpl implements MainService {
     private final ProducerService producerService;
     private final RawDataDAO rawDataDAO;
     private final AppUserDAO appUserDao;
     private final FileService fileService;
     private final AppUserService appUserService;
-
-    public MainServiceImpl(ProducerService producerService,
-                           RawDataDAO rawDataDAO,
-                           AppUserDAO appUserDao,
-                           FileService fileService,
-                           AppUserService appUserService) {
-        this.producerService = producerService;
-        this.rawDataDAO = rawDataDAO;
-        this.appUserDao = appUserDao;
-        this.fileService = fileService;
-        this.appUserService = appUserService;
-    }
 
     @Override
     public void processTextMessage(Update update) {
@@ -110,21 +100,6 @@ public class MainServiceImpl implements MainService {
             var error = "Unfortunately, photo upload failed. Try again later.";
             sendAnswer(error, chatId);
         }
-    }
-
-    @Override
-    public void processVoiceMessage(Update update) {
-        saveRawData(update);
-        AppUser appUser = findOrSaveAppUser(update);
-        Long chatId = update.getMessage().getChatId();
-
-        if (isNotAllowToSendContent(chatId, appUser)) {
-            return;
-        }
-
-        // TODO добавить сохранение voice
-        String answer = "Voice is successfully loaded! The link for load: http:test.com/getVoice/111";
-        sendAnswer(answer, chatId);
     }
 
     private boolean isNotAllowToSendContent(Long chatId, AppUser appUser) {

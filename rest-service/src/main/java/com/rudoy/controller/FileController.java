@@ -4,6 +4,7 @@ import com.rudoy.entity.AppDocument;
 import com.rudoy.entity.AppPhoto;
 import com.rudoy.entity.BinaryContent;
 import com.rudoy.service.FileService;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j;
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.http.MediaType;
@@ -18,15 +19,12 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 
-@RestController
-@RequestMapping("/file")
+@RequiredArgsConstructor
 @Log4j
+@RequestMapping("/file")
+@RestController
 public class FileController {
     private final FileService fileService;
-
-    public FileController(FileService fileService) {
-        this.fileService = fileService;
-    }
 
     @GetMapping("/getDoc")
     public void getDoc(@RequestParam String id, HttpServletResponse response) {

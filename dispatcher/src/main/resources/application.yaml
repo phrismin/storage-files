@@ -2,8 +2,8 @@ server:
   port: 8084
 
 bot:
-  name: Universal2023Bot
-  token: 6354455610:AAEsbiuSzRHaZezSAH53tQNLmLVDnKTdWx0
+  name: universal2024bot
+  token: 6331526998:AAGjbYhxye7o5l4oELIiivx0_7nv_e-07Hk
 
 spring:
   rabbitmq:
@@ -11,3 +11,8 @@ spring:
     port: 5672
     username: userok
     password: p@ssw0rd
+    queues:
+      text-message-update: text_message_update
+      doc-message-update: doc_message_update
+      photo-message-update: photo_message_update
+      answer-message: answer_message

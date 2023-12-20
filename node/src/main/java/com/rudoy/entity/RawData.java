@@ -13,10 +13,10 @@ import javax.persistence.*;
 @EqualsAndHashCode(exclude = "id")
 @NoArgsConstructor
 @AllArgsConstructor
-@Entity
 @Builder
 @Table(name = "raw_data")
 @TypeDef(name = "jsonb", typeClass = JsonBinaryType.class)
+@Entity
 public class RawData {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

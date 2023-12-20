@@ -1,26 +1,24 @@
 package com.rudoy.controller;
 
+import com.rudoy.config.RabbitConfiguration;
 import com.rudoy.service.UpdateProducer;
 import com.rudoy.utils.MessageUtils;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.Message;
 import org.telegram.telegrambots.meta.api.objects.Update;
 
-import static com.rudoy.model.RabbitQueue.*;
-
-@Component
+@RequiredArgsConstructor
 @Slf4j
+@Component
 public class UpdateController {
     private TelegramBot telegramBot;
-    private MessageUtils messageUtils;
-    private UpdateProducer updateProducer;
+    private final MessageUtils messageUtils;
+    private final UpdateProducer updateProducer;
+    private final RabbitConfiguration rabbitConfiguration;
 
-    public UpdateController(MessageUtils messageUtils, UpdateProducer updateProducer) {
-        this.updateProducer = updateProducer;
-        this.messageUtils = messageUtils;
-    }
 
     public void registerTelegramBot(TelegramBot telegramBot) {
         this.telegramBot = telegramBot;
@@ -47,27 +45,21 @@ public class UpdateController {
             processMessageDocument(update);
         } else if (message.hasPhoto()) {
             processMessagePhoto(update);
-        } else if (message.hasVoice()) {
-            processMessageVoice(update);
         } else {
             setUnsupportedMessageTypeView(update);
         }
     }
 
     private void processMessageText(Update update) {
-        updateProducer.produce(TEXT_MESSAGE_UPDATE, update);
+        updateProducer.produce(rabbitConfiguration.getTextMessageUpdateQueue(), update);
     }
 
     private void processMessageDocument(Update update) {
-        updateProducer.produce(DOC_MESSAGE_UPDATE, update);
+        updateProducer.produce(rabbitConfiguration.getDocMessageUpdateQueue(), update);
     }
 
     private void processMessagePhoto(Update update) {
-        updateProducer.produce(PHOTO_MESSAGE_UPDATE, update);
-    }
-
-    private void processMessageVoice(Update update) {
-        updateProducer.produce(VOICE_MESSAGE_UPDATE, update);
+        updateProducer.produce(rabbitConfiguration.getPhotoMessageUpdateQueue(), update);
     }
 
     private void setUnsupportedMessageTypeView(Update update) {

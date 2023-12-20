@@ -6,24 +6,17 @@ import com.rudoy.entity.AppDocument;
 import com.rudoy.entity.AppPhoto;
 import com.rudoy.service.FileService;
 import com.rudoy.utils.CryptoTool;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j;
 import org.springframework.stereotype.Service;
 
-
-@Service
+@RequiredArgsConstructor
 @Log4j
+@Service
 public class FileServiceImpl implements FileService {
     private final AppDocumentDAO appDocumentDAO;
     private final AppPhotoDAO appPhotoDAO;
     private final CryptoTool cryptoTool;
-
-    public FileServiceImpl(AppDocumentDAO appDocumentDAO,
-                           AppPhotoDAO appPhotoDAO,
-                           CryptoTool cryptoTool) {
-        this.appDocumentDAO = appDocumentDAO;
-        this.appPhotoDAO = appPhotoDAO;
-        this.cryptoTool = cryptoTool;
-    }
 
     @Override
     public AppDocument getDocument(String hashId) {
@@ -43,3 +36,4 @@ public class FileServiceImpl implements FileService {
         return appPhotoDAO.findById(id).orElse(null);
     }
 }
+

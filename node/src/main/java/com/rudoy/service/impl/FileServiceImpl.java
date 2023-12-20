@@ -10,6 +10,7 @@ import com.rudoy.exeptions.UploadFileException;
 import com.rudoy.service.FileService;
 import com.rudoy.service.enums.LinkType;
 import com.rudoy.utils.CryptoTool;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Value;
@@ -29,8 +30,9 @@ import java.net.URL;
 import static java.util.Objects.hash;
 
 
-@Service
+@RequiredArgsConstructor
 @Log4j
+@Service
 public class FileServiceImpl implements FileService {
     @Value("${bot.token}")
     private String token;
@@ -44,16 +46,6 @@ public class FileServiceImpl implements FileService {
     private final AppPhotoDAO appPhotoDAO;
     private final BinaryContentDAO binaryContentDAO;
     private final CryptoTool cryptoTool;
-
-    public FileServiceImpl(AppDocumentDAO appDocumentDAO,
-                           AppPhotoDAO appPhotoDAO,
-                           BinaryContentDAO binaryContentDAO,
-                           CryptoTool cryptoTool) {
-        this.appDocumentDAO = appDocumentDAO;
-        this.appPhotoDAO = appPhotoDAO;
-        this.binaryContentDAO = binaryContentDAO;
-        this.cryptoTool = cryptoTool;
-    }
 
     @Override
     public AppDocument processDoc(Message telegramMessage) {

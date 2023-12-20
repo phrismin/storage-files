@@ -6,30 +6,25 @@ import com.rudoy.entity.AppUser;
 import com.rudoy.entity.enums.UserState;
 import com.rudoy.service.AppUserService;
 import com.rudoy.utils.CryptoTool;
-import com.sun.net.httpserver.Headers;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.*;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
-import javax.mail.Header;
 import javax.mail.internet.AddressException;
 import javax.mail.internet.InternetAddress;
 import java.util.Optional;
 
-@Service
+@RequiredArgsConstructor
 @Log4j
+@Service
 public class AppUserServiceImpl implements AppUserService {
     private final AppUserDAO appUserDAO;
     private final CryptoTool cryptoTool;
     @Value("${service.mail.uri}")
     private String mailServiceUri;
-
-    public AppUserServiceImpl(AppUserDAO appUserDAO, CryptoTool cryptoTool) {
-        this.appUserDAO = appUserDAO;
-        this.cryptoTool = cryptoTool;
-    }
 
     @Override
     public String registerUser(AppUser appUser) {
